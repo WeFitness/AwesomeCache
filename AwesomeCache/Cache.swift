@@ -200,6 +200,11 @@ open class Cache<T: NSCoding> {
             }
         }) 
     }
+    
+    open func allKeys() -> [String] {
+        let urls = try? self.fileManager.contentsOfDirectory(at: self.cacheDirectory, includingPropertiesForKeys: nil, options: [])
+        return urls?.flatMap { $0.deletingPathExtension().lastPathComponent } ?? []
+    }
 
     // MARK: Subscripting
 
@@ -250,11 +255,6 @@ open class Cache<T: NSCoding> {
 
 
     // MARK: Private Helper
-
-    fileprivate func allKeys() -> [String] {
-        let urls = try? self.fileManager.contentsOfDirectory(at: self.cacheDirectory, includingPropertiesForKeys: nil, options: [])
-        return urls?.flatMap { $0.deletingPathExtension().lastPathComponent } ?? []
-    }
 
     fileprivate func urlForKey(_ key: String) -> URL {
         let k = sanitizedKey(key)
